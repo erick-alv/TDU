@@ -47,7 +47,7 @@ public class Spawner : MonoBehaviour
             }
 
             currentActiveTime += Time.deltaTime * GameManager.Instance.speedUp;
-            if (spawnCallsCurrrentWave >= waveNumber)
+            if (spawnCallsCurrrentWave >= 2*waveNumber)
             {
                 isSpawning=false;
             }

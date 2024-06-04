@@ -122,4 +122,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   reachDistance: 0.3
-  damageResistance: 1
+  damageResistance: 5

@@ -3,16 +3,41 @@ using System.Collections;
 
 public class Turret : MonoBehaviour
 {
-
+    [Header("Turret Fire Logic")]
     public Bullet bulletPrefab;
     public float range = 15f;//TODO adjust ranges
     public float fireTimeInterval = 1f;
     public string enemyTag = "Enemy";
+    public Transform[] firePoints;
 
     private Transform target;
     private Enemy targetEnemy;//TODO used??
     private float activeFireTime = 0.0f;
- 
+
+    [Header("For visualizations")]
+    public Renderer[] renderers;
+    public GameObject rangeVisualization;
+
+    private Material[] originalMaterials;
+
+    [Header("For Construction Logic")]
+    public Transform PlacementPoint;
+
+
+    private void Awake()
+    {
+        originalMaterials = new Material[renderers.Length];
+        for(int i=0; i<originalMaterials.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].material;//TODO verify if line is correct
+        }
+        rangeVisualization.transform.localScale = Vector3.one * 2 * range;
+        
+    }
+
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -67,11 +92,14 @@ public class Turret : MonoBehaviour
 
     void Shoot()
     {
-        Bullet bullet = Instantiate(bulletPrefab, gameObject.transform.position, bulletPrefab.transform.rotation);
-        if (bullet != null)
-        {
-            bullet.SetEnemyTarget(targetEnemy);
+        foreach(Transform firePoint in firePoints) {
+            Bullet bullet = Instantiate(bulletPrefab, firePoint.position, bulletPrefab.transform.rotation);
+            if (bullet != null)
+            {
+                bullet.SetEnemyTarget(targetEnemy);
+            }
         }
+        
     }
 
     void OnDrawGizmosSelected()
