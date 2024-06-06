@@ -97,7 +97,9 @@ MonoBehaviour:
   - {fileID: 7927582011759765775}
   - {fileID: 441643058252423265}
   rangeVisualization: {fileID: 1737353170754780557}
-  PlacementPoint: {fileID: 4537198890801860565}
+  placementPoint: {fileID: 4537198890801860565}
+  otherFieldCoordinates:
+  - {x: 1, y: 0}
 --- !u!1 &1100912284858504760
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &305460128994092331
 Transform:
   m_ObjectHideFlags: 0

@@ -21,7 +21,8 @@ public class Turret : MonoBehaviour
     private Material[] originalMaterials;
 
     [Header("For Construction Logic")]
-    public Transform PlacementPoint;
+    public Transform placementPoint;
+    public Vector2Int[] otherFieldCoordinates;
 
 
     private void Awake()
@@ -31,12 +32,8 @@ public class Turret : MonoBehaviour
         {
             originalMaterials[i] = renderers[i].material;//TODO verify if line is correct
         }
-        rangeVisualization.transform.localScale = Vector3.one * 2 * range;
-        
+        rangeVisualization.transform.localScale = Vector3.one * 2 * range;   
     }
-
-
-
 
 
     // Update is called once per frame
@@ -107,4 +104,35 @@ public class Turret : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, range);
     }
+
+
+    public void Rotate90AntiHour()
+    {
+        this.transform.RotateAround(placementPoint.position, Vector3.up, -90);
+        for (int i = 0; i < otherFieldCoordinates.Length; i++)
+        {
+            Vector2Int c = otherFieldCoordinates[i];
+            //equivalent of applying 90 rotation in anti hour direction
+            otherFieldCoordinates[i].x = -c.y;
+            otherFieldCoordinates[i].y = c.x;
+        }
+    }
+
+    public void SetMaterial(Material newMaterial)
+    {
+        foreach(var rend in renderers)
+        {
+            rend.material = newMaterial;
+        }
+    }
+
+    public void SetBackOriginalMaterial()
+    {
+        for(int i = 0; i<renderers.Length; i++)
+        {
+            renderers[i].material = originalMaterials[i];
+        }
+        
+    }
+
 }

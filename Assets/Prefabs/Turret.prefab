@@ -132,7 +132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8377446897452744153
 Transform:
   m_ObjectHideFlags: 0
@@ -257,7 +257,8 @@ MonoBehaviour:
   - {fileID: 440297746686916578}
   - {fileID: 1100929449044248357}
   rangeVisualization: {fileID: 3495537687296533900}
-  PlacementPoint: {fileID: 2480944989578594111}
+  placementPoint: {fileID: 2480944989578594111}
+  otherFieldCoordinates: []
 --- !u!1 &7332938272939443843
 GameObject:
   m_ObjectHideFlags: 0

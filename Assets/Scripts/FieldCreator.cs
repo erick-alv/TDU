@@ -17,8 +17,8 @@ public class FieldCreator : MonoBehaviour
     public GameObject startPoint;
     public GameObject endPoint;
 
-    private int width = 5;
-    private int height = 5;
+    private int width = 0;
+    private int height = 0;
     private Vector3 startCoord = Vector3.zero;
     private float spacing = 0.25f;
     private float platformDim = 4.0f;
@@ -69,6 +69,7 @@ public class FieldCreator : MonoBehaviour
                     //TODO estimate coords
                     Vector3 pPos = CoordToPos(coord.x, coord.y);
                     platforms[i][j] = Instantiate<FieldPlatform>(platformPrefab, pPos, platformPrefab.transform.rotation);
+                    platforms[i][j].coords = new Vector2Int(i, j);
                 } else
                 {
                     platforms[i][j] = null;
@@ -77,7 +78,7 @@ public class FieldCreator : MonoBehaviour
         }
     }
 
-    private Vector3 CoordToPos(int i, int j)
+    public Vector3 CoordToPos(int i, int j)
     {
         Vector3 ans = Vector3.zero;
         ans.x = i * platformDim + spacing * i;
@@ -192,4 +193,25 @@ public class FieldCreator : MonoBehaviour
         postions.Reverse();
         return postions;
     }
+
+    public Vector2Int GetFieldDimension()
+    {
+        return new Vector2Int(width, height);
+    }
+
+    public List<FieldPlatform> GetPlatformsAtCoords(List<Vector2Int> coords)
+    {
+        List<FieldPlatform> plats = new List<FieldPlatform>();
+        foreach(Vector2Int coord in coords) {
+            if (coord.x >= width || coord.x <0 || coord.y >= height || coord.y < 0) {
+                plats.Add(null);//if it is out of range put a null
+            } else
+            {
+                plats.Add(platforms[coord.x][coord.y]);
+            }
+        }
+        return plats;
+    }
+
+    
 }
