@@ -66,7 +66,6 @@ public class FieldCreator : MonoBehaviour
                 Vector2Int coord = new Vector2Int(i, j);
                 if (!pathSpaces.Contains(coord))
                 {
-                    //TODO estimate coords
                     Vector3 pPos = CoordToPos(coord.x, coord.y);
                     platforms[i][j] = Instantiate<FieldPlatform>(platformPrefab, pPos, platformPrefab.transform.rotation);
                     platforms[i][j].coords = new Vector2Int(i, j);
@@ -198,6 +197,11 @@ public class FieldCreator : MonoBehaviour
     public Vector2Int GetFieldDimension()
     {
         return new Vector2Int(width, height);
+    }
+
+    public Vector2 GetFieldCoordinatesDimension()
+    {
+        return new Vector2((width - 1)*(platformDim+spacing), (height-1) * (platformDim + spacing));
     }
 
     public List<FieldPlatform> GetPlatformsAtCoords(List<Vector2Int> coords)

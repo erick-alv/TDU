@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     private FieldCreator fieldCreator;
     [SerializeField]
     private GroundPath groundPath;
+    [SerializeField]
+    private GameObject cam;
 
     private void Awake()
     {
@@ -118,6 +120,13 @@ public class GameManager : MonoBehaviour
             waveText.SetText($"Wave: {WaveNumber}");
             spawner.StartSpawning();
         }
+    }
+
+    public void CentrateCamera()
+    {
+        Vector2 coordDim = fieldCreator.GetFieldCoordinatesDimension();
+        Vector3 newPos = new Vector3(coordDim.x/2, cam.transform.position.y, coordDim.y/2);
+        cam.transform.position = newPos;
     }
 
     public int AmountEnemiesCurrentWave()

@@ -15,6 +15,7 @@ public class Constructor : MonoBehaviour
     public Material platSelectionMaterial;
     public Material validMaterial;
     public Material invalidMaterial;
+    public Material turretToMoveMaterial;
 
     public Turret[] turretPrefabs = new Turret[3];
 
@@ -53,16 +54,21 @@ public class Constructor : MonoBehaviour
     private Turret prevMoveTurret = null;//just for move case
     private List<FieldPlatform> prevMoveSecondaryPlatforms = new List<FieldPlatform>();//just for move case
 
+    private void Start()
+    {
+        TextMeshProUGUI el1Text = turret1El.GetComponentInChildren<TextMeshProUGUI>();
+        el1Text.SetText($"Turret 1\nCost: {turretPrefabs[0].goldPrice}");
 
+        TextMeshProUGUI el2Text = turret2El.GetComponentInChildren<TextMeshProUGUI>();
+        el2Text.SetText($"Turret 2\nCost: {turretPrefabs[1].goldPrice}");
 
-    //TODO check " currentMode == ..." to see which ones I  include/remove
-    //TODO disable other actions whn doing one (on Editor)!!!!
-    //TODO after cancelling or (confirming and finishing action) empty and set respective variables
+        TextMeshProUGUI el3Text = turret3El.GetComponentInChildren<TextMeshProUGUI>();
+        el3Text.SetText($"Turret 3\nCost: {turretPrefabs[2].goldPrice}");
+    }
 
 
 
     // __________________________________________________________Begin Modes
-
     public void BeginConstructing()
     {
         bool b = BeginInit();
@@ -92,9 +98,8 @@ public class Constructor : MonoBehaviour
         }
         secondaryPlatforms = fieldCreator.GetPlatformsAtCoords(secondaryCoords);
 
-        //  Visualize current platforms and turrets
+        //  Visualize current platforms
         VisualizeCurrentPlatforms();
-        VisualizeTurret();
 
         //Activate corresponding UI
         SetVisibilityOptions(false);
@@ -178,7 +183,7 @@ public class Constructor : MonoBehaviour
         {
             Destroy(currentTurret.gameObject);
         } else if(currentMode == Mode.MovingNewPlace) {
-            prevMoveTurret.gameObject.SetActive(true);//TODO instead of setting to true set color to normal
+            prevMoveTurret.SetBackOriginalMaterial();
             //delete current Turret
             Destroy(currentTurret.gameObject);
             //set again the turret to the fields
@@ -281,7 +286,7 @@ public class Constructor : MonoBehaviour
                 GameObject copyObject = Instantiate(prevMovePlatform.turretAtPlatform);
                 //Set the previous turret to inactive so that we can reset it
                 prevMoveTurret = prevMovePlatform.turretAtPlatform.GetComponent<Turret>();
-                prevMoveTurret.gameObject.SetActive(false);//TODO instead of inactive set some invisible color
+                prevMoveTurret.SetMaterial(turretToMoveMaterial);
                 //Remove reference in platforms
                 foreach (var plat in allPlatforms)
                 {
@@ -309,9 +314,8 @@ public class Constructor : MonoBehaviour
                 secondaryPlatforms.Clear();
                 secondaryPlatforms = fieldCreator.GetPlatformsAtCoords(secondaryCoords);
 
-                //  Visualize current platforms and turrets
+                //  Visualize current platforms
                 VisualizeCurrentPlatforms();
-                VisualizeTurret();
 
                 //Activate corresponding UI
                 SetVisibilityRotate(true);
@@ -433,35 +437,31 @@ public class Constructor : MonoBehaviour
 
     private void VisualizeCurrentPlatforms()
     {
-
-        //TODO perhaps quit visualization of secondary platforms???? (once done) 
-        currentPlatform.SetMaterial(platSelectionMaterial);
-        foreach (var platform in secondaryPlatforms)
-        {
-            if (platform != null)
-            {
-                platform.SetMaterial(platSelectionMaterial);
-            }
-        }
-    }
-
-    private void VisualizeTurret()
-    {
+        Material materialToUse;
         if(currentMode == Mode.Constructing || currentMode == Mode.MovingNewPlace)
         {
             bool validPlacement = Validate();
             if (validPlacement)
             {
-                currentTurret.SetMaterial(validMaterial);
+                materialToUse = validMaterial;
             } else
             {
-                currentTurret.SetMaterial(invalidMaterial);
+                materialToUse = invalidMaterial;
+            }
+        } else
+        {
+            materialToUse = platSelectionMaterial;
+        }
+        
+        currentPlatform.SetMaterial(materialToUse);
+        foreach (var platform in secondaryPlatforms)
+        {
+            if (platform != null)
+            {
+                platform.SetMaterial(materialToUse);
             }
         }
     }
-
-
-
 
     // __________________________________________________________Move around field Functions
 
@@ -554,9 +554,8 @@ public class Constructor : MonoBehaviour
             secondaryPlatforms.Clear();
             secondaryPlatforms = fieldCreator.GetPlatformsAtCoords(secondaryCoords);
         }
-        //  Visualize current platforms and turrets    
+        //  Visualize current platforms  
         VisualizeCurrentPlatforms();
-        VisualizeTurret();
 
     }
 
@@ -579,9 +578,8 @@ public class Constructor : MonoBehaviour
             secondaryPlatforms.Clear();
             secondaryPlatforms = fieldCreator.GetPlatformsAtCoords(secondaryCoords);
 
-            //  Visualize current platforms and turrets
+            //  Visualize current platforms
             VisualizeCurrentPlatforms();
-            VisualizeTurret();
         }
     }
 
@@ -623,7 +621,6 @@ public class Constructor : MonoBehaviour
 
             //  Visualize current platforms and turrets    
             VisualizeCurrentPlatforms();
-            VisualizeTurret();
         }
         
 
