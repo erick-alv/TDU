@@ -28,10 +28,7 @@ public class Constructor : MonoBehaviour
     public GameObject rotateEl;
     public GameObject confirmEl;
     public GameObject cancelEl;
-    public GameObject constructEl;
-    public GameObject moveEl;
-    public GameObject destroyEl;
-    public GameObject finishBuildingEl;
+    public GameObject optionsEl;
     public GameObject turret1El;
     public GameObject turret2El;
     public GameObject turret3El;
@@ -637,10 +634,7 @@ public class Constructor : MonoBehaviour
 
     public void SetVisibilityOptions(bool visible)
     {
-        constructEl.SetActive(visible);
-        moveEl.SetActive(visible);
-        destroyEl.SetActive(visible);
-        finishBuildingEl.SetActive(visible);
+        optionsEl.SetActive(visible);
     }
     
     private void SetVisibilityMovementArrows(bool visible)
