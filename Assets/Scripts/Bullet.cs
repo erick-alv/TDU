@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!GameManager.Instance.paused)
+        if(!GameManager.Instance.Paused)
         {
             if (enemyTarget == null)
             {
@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
             float distanceToTarget = dir.magnitude;
             dir = dir.normalized;
 
-            float updateDistance = speed * Time.deltaTime * GameManager.Instance.speedUp;
+            float updateDistance = speed * Time.deltaTime * GameManager.Instance.SpeedUp;
 
 
             if(updateDistance >= distanceToTarget)

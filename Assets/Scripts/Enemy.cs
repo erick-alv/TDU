@@ -4,11 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
-{
-    // Start is called before the first frame update
-    
-
-
+{   
     public float speed = 4;
     public float reachDistance = 0.3f;
     public int damageResistance = 1;
@@ -21,7 +17,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        
         StartPathTarget();
     }
 
@@ -32,7 +27,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (!GameManager.Instance.paused && !died)
+        if (!GameManager.Instance.Paused && !died)
         {
             Move();
         }
@@ -47,7 +42,6 @@ public class Enemy : MonoBehaviour
         if (distance <= reachDistance) {
             GetNextPoint();
         }
-        
     }
 
     protected void MoveTowardsTarget()
@@ -55,7 +49,7 @@ public class Enemy : MonoBehaviour
         Vector3 dir = target.transform.position - transform.position;
         dir[1] = 0.0f;
         dir = dir.normalized;
-        transform.Translate(dir * speed * Time.deltaTime, Space.World);
+        transform.Translate(dir * speed * GameManager.Instance.SpeedUp * Time.deltaTime, Space.World);
     }
 
     void GetNextPoint()
@@ -72,6 +66,8 @@ public class Enemy : MonoBehaviour
 
     void EndPointReached()
     {
+        GameManager.Instance.DecreaseLives(1);
+        GameManager.Instance.ReportDestroyedEnemy();
         Destroy(gameObject);
     }
 
@@ -96,7 +92,8 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         died = true;
-        //TODO increment gold
+        GameManager.Instance.IncreaseGold(1);
+        GameManager.Instance.ReportDestroyedEnemy();
         Destroy(gameObject);
     }
 

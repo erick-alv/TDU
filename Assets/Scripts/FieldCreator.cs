@@ -19,7 +19,6 @@ public class FieldCreator : MonoBehaviour
 
     private int width = 0;
     private int height = 0;
-    private Vector3 startCoord = Vector3.zero;
     private float spacing = 0.25f;
     private float platformDim = 4.0f;
 
@@ -27,6 +26,7 @@ public class FieldCreator : MonoBehaviour
     private List<Vector2Int> pathSpaces = new List<Vector2Int>();
     private List<Vector3> pathPointsPositions = new List<Vector3>();
     private FieldPlatform[][] platforms;
+    public bool fieldInitialized;
 
 
     void Start()
@@ -53,9 +53,9 @@ public class FieldCreator : MonoBehaviour
         {
             platforms[i] = new FieldPlatform[height];
         }
+        fieldInitialized = true;
 
 
-        //TODO create pathSpaces
         DeterminePath();
 
 
@@ -101,7 +101,7 @@ public class FieldCreator : MonoBehaviour
         return num;
     }
 
-    private void EliminatePreviousField()
+    public void EliminatePreviousField()
     {
         if(pathSpaces != null)
         {
@@ -122,6 +122,7 @@ public class FieldCreator : MonoBehaviour
                 }
             }
         }
+        fieldInitialized = false;
     }
 
     private void DeterminePath()

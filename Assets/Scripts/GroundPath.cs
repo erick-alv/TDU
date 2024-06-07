@@ -8,15 +8,6 @@ public class GroundPath : MonoBehaviour
     public PathPoint pathPointPrefab;
     public static PathPoint[] points;
 
-    /*void Awake()
-    {
-        points = new PathPoint[transform.childCount];
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i] = transform.GetChild(i).GetComponent<PathPoint>();
-        }
-    }*/
-
     public void CreatePathPoints(List<Vector3> positions)
     {
         if(points != null) {

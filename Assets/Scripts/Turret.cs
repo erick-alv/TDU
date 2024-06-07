@@ -21,6 +21,7 @@ public class Turret : MonoBehaviour
     private Material[] originalMaterials;
 
     [Header("For Construction Logic")]
+    public int goldPrice;
     public Transform placementPoint;
     public Vector2Int[] otherFieldCoordinates;
 
@@ -30,7 +31,7 @@ public class Turret : MonoBehaviour
         originalMaterials = new Material[renderers.Length];
         for(int i=0; i<originalMaterials.Length; i++)
         {
-            originalMaterials[i] = renderers[i].material;//TODO verify if line is correct
+            originalMaterials[i] = renderers[i].material;
         }
         rangeVisualization.transform.localScale = Vector3.one * 2 * range;   
     }
@@ -39,8 +40,8 @@ public class Turret : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if( !GameManager.Instance.paused) {
-            SeekEnemies();
+        if( !GameManager.Instance.Paused) {
+            SeekEnemies();//TODO better in coroutine!!
 
             if (target == null)
             {
@@ -54,7 +55,7 @@ public class Turret : MonoBehaviour
                 activeFireTime = 0.0f;
             }
 
-            activeFireTime += Time.deltaTime * GameManager.Instance.speedUp;
+            activeFireTime += Time.deltaTime * GameManager.Instance.SpeedUp;
 
         }
     }

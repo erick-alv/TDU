@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 6326271193889010203}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -257,6 +257,7 @@ MonoBehaviour:
   - {fileID: 440297746686916578}
   - {fileID: 1100929449044248357}
   rangeVisualization: {fileID: 3495537687296533900}
+  goldPrice: 3
   placementPoint: {fileID: 2480944989578594111}
   otherFieldCoordinates: []
 --- !u!1 &7332938272939443843

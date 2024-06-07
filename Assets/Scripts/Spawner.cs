@@ -10,44 +10,37 @@ public class Spawner : MonoBehaviour
     public GroundEnemy groundEnemyPrefab;
     public float countDownTime=2f;
 
-    
-    private float waveNumber = 0;
-    private int spawnCallsCurrrentWave = 0;
-    private bool isSpawning = false;
+    private int spawnedEnemiesCurrentWave = 0;
+    public bool isSpawning = false;
     private float currentActiveTime = 0.0f;
 
-    public void Start()
+    public void StartSpawning()
     {
-        //StartNextWave();//TODO delete this must be called by other script
-    }
-
-    public void StartNextWave()
-    {
-        waveNumber++;
         isSpawning = true;
-        spawnCallsCurrrentWave = 0;
+        spawnedEnemiesCurrentWave = 0;
         currentActiveTime = countDownTime;
-
     }
-
-    
 
     void Update()
     {
 
-        if (!GameManager.Instance.paused && isSpawning)
+        if (!GameManager.Instance.Paused && isSpawning)
         {
 
             if (currentActiveTime >= countDownTime)
             {
-                SpawnEnenemies();
-                spawnCallsCurrrentWave++;
+                SpawnGroundEnenemy();
+                spawnedEnemiesCurrentWave++;
+                if(spawnedEnemiesCurrentWave < GameManager.Instance.AmountEnemiesCurrentWave())
+                {
+                    SpawnFlyingEnemy();
+                    spawnedEnemiesCurrentWave++;
+                }
                 currentActiveTime = 0.0f;
-
             }
 
-            currentActiveTime += Time.deltaTime * GameManager.Instance.speedUp;
-            if (spawnCallsCurrrentWave >= 2*waveNumber)
+            currentActiveTime += Time.deltaTime * GameManager.Instance.SpeedUp;
+            if (spawnedEnemiesCurrentWave >= GameManager.Instance.AmountEnemiesCurrentWave())
             {
                 isSpawning=false;
             }
@@ -55,17 +48,18 @@ public class Spawner : MonoBehaviour
         
     }
 
-
-    public void SpawnEnenemies()
+    public void SpawnGroundEnenemy()
     {
         Vector3 positionGround = gameObject.transform.position + gameObject.transform.forward * -4;
         positionGround[1] = groundEnemyPrefab.transform.position[1];
         SpawnEnemy(groundEnemyPrefab, positionGround);
+    }
 
+    public void SpawnFlyingEnemy()
+    {
         Vector3 positionAir = gameObject.transform.position;
         positionAir[1] = flyingEnemyPrefab.transform.position[1];
         SpawnEnemy(flyingEnemyPrefab, positionAir);
-
     }
 
     void SpawnEnemy(Enemy enemy, Vector3 position)

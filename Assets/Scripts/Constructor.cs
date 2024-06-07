@@ -20,6 +20,22 @@ public class Constructor : MonoBehaviour
 
     [Header("UI Elements references")]
     public TextMeshProUGUI logText;
+    public GameObject logTextElement;
+    public GameObject upArrow;
+    public GameObject downArrow;
+    public GameObject leftArrow;
+    public GameObject rightArrow;
+    public GameObject rotateEl;
+    public GameObject confirmEl;
+    public GameObject cancelEl;
+    public GameObject constructEl;
+    public GameObject moveEl;
+    public GameObject destroyEl;
+    public GameObject finishBuildingEl;
+    public GameObject turret1El;
+    public GameObject turret2El;
+    public GameObject turret3El;
+
 
     enum Mode { None, Constructing, Destroying, MovingSelection, MovingNewPlace };
     
@@ -34,11 +50,11 @@ public class Constructor : MonoBehaviour
     private Vector2Int currentCoords = Vector2Int.zero;
     private List<Vector2Int> secondaryCoords = new List<Vector2Int>();
     //vars to set/put null on changinf prefab
-    private int currentPrefabIndex = 1; //TODO make 0 default
+    private int currentPrefabIndex = 0;
     private Turret currentTurret = null;
     private FieldPlatform prevMovePlatform = null;//just for move case
     private Turret prevMoveTurret = null;//just for move case
-    private List<FieldPlatform> prevMoveSecondaryPlatforms = new List<FieldPlatform>();
+    private List<FieldPlatform> prevMoveSecondaryPlatforms = new List<FieldPlatform>();//just for move case
 
 
 
@@ -82,6 +98,14 @@ public class Constructor : MonoBehaviour
         //  Visualize current platforms and turrets
         VisualizeCurrentPlatforms();
         VisualizeTurret();
+
+        //Activate corresponding UI
+        SetVisibilityOptions(false);
+        SetVisibilityMovementArrows(true);
+        SetVisibilityRotate(true);
+        SetVisibilityConfirmCancel(true);
+        SetVisibilityTurretButtons(true);
+        SetVisibilityLog(true);
     }
 
     public void BeginDestroying()
@@ -97,6 +121,12 @@ public class Constructor : MonoBehaviour
         SetInitialCoordAndPlatform();
         VisualizeCurrentPlatforms();
 
+        //Activate corresponding UI
+        SetVisibilityOptions(false);
+        SetVisibilityMovementArrows(true);
+        SetVisibilityConfirmCancel(true);
+        SetVisibilityLog(true);
+
     }
 
     public void BeginMovingSelection()
@@ -110,6 +140,12 @@ public class Constructor : MonoBehaviour
 
         SetInitialCoordAndPlatform();
         VisualizeCurrentPlatforms();
+
+        //Activate corresponding UI
+        SetVisibilityOptions(false);
+        SetVisibilityMovementArrows(true);
+        SetVisibilityConfirmCancel(true);
+        SetVisibilityLog(true);
 
     }
 
@@ -167,8 +203,9 @@ public class Constructor : MonoBehaviour
     {
         if (currentMode == Mode.Constructing)
         {
-            bool validPlacement = Validate();//TODO make validation of Gold
-            if (validPlacement)
+            bool validPlacement = Validate();
+            bool enoughGold = GameManager.Instance.Gold >= currentTurret.goldPrice;
+            if (validPlacement && enoughGold)
             {
                 //Assign turret to platform
                 List<FieldPlatform> allPlatforms = new List<FieldPlatform> {currentPlatform};
@@ -181,6 +218,9 @@ public class Constructor : MonoBehaviour
 
                 currentTurret.rangeVisualization.SetActive(false);
 
+                //Take Gold
+                GameManager.Instance.DecreaseGold(currentTurret.goldPrice);
+
                 //put normal materials
                 currentTurret.SetBackOriginalMaterial();
                 SetCurrentPlatformsToNormal();
@@ -188,19 +228,25 @@ public class Constructor : MonoBehaviour
 
                 //Put variables again to default values
                 CleanUp();
-
-                //TODO take Gold
             } else
             {
-                logText.SetText("It is not possible to construct the turret in the current location");
+                if(!validPlacement)
+                {
+                    logText.SetText("It is not possible to construct the turret in the current location");
+                } else
+                {
+                    logText.SetText("Not enough gold to build this turret");
+                }
+                
             }
         } else if (currentMode == Mode.Destroying) { 
             bool validDeletion = Validate();
             if(validDeletion)
             {
+                //recover Gold of Platform
+                GameManager.Instance.IncreaseGold(currentTurret.goldPrice);
                 //Destroy turret
                 Destroy(currentPlatform.turretAtPlatform);
-                //TODO recover gold??????
                 List<FieldPlatform> allPlatforms = currentPlatform.platformsWithTurret;
                 //Remove reference in platforms
                 foreach(var plat in allPlatforms)
@@ -270,6 +316,9 @@ public class Constructor : MonoBehaviour
                 VisualizeCurrentPlatforms();
                 VisualizeTurret();
 
+                //Activate corresponding UI
+                SetVisibilityRotate(true);
+
             }
             else
             {
@@ -323,7 +372,16 @@ public class Constructor : MonoBehaviour
         prevMovePlatform = null;
         prevMoveTurret = null;
         prevMoveSecondaryPlatforms.Clear();
-}
+
+        //reset construction UI to begin
+        SetVisibilityOptions(true);
+        SetVisibilityMovementArrows(false);
+        SetVisibilityRotate(false);
+        SetVisibilityConfirmCancel(false);
+        SetVisibilityLog(false);
+        SetVisibilityTurretButtons(false);
+
+    }
 
     private bool Validate()
     {
@@ -574,5 +632,46 @@ public class Constructor : MonoBehaviour
 
     }
 
+
+    // __________________________________________________________ Setting Visibility Of UI elements is groups
+
+    public void SetVisibilityOptions(bool visible)
+    {
+        constructEl.SetActive(visible);
+        moveEl.SetActive(visible);
+        destroyEl.SetActive(visible);
+        finishBuildingEl.SetActive(visible);
+    }
+    
+    private void SetVisibilityMovementArrows(bool visible)
+    {
+        upArrow.SetActive(visible);
+        downArrow.SetActive(visible);
+        leftArrow.SetActive(visible);
+        rightArrow.SetActive(visible);
+    }
+
+    private void SetVisibilityRotate(bool visible)
+    {
+        rotateEl.SetActive(visible);
+    }
+
+    private void SetVisibilityConfirmCancel(bool visible)
+    {
+        confirmEl.SetActive(visible);
+        cancelEl.SetActive(visible);
+    }
+
+    private void SetVisibilityLog(bool visible)
+    {
+        logTextElement.SetActive(visible);
+    }
+
+    private void SetVisibilityTurretButtons(bool visible)
+    {
+        turret1El.SetActive(visible);
+        turret2El.SetActive(visible);
+        turret3El.SetActive(visible);
+    }
 
 }
