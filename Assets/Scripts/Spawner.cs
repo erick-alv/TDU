@@ -63,7 +63,6 @@ public class Spawner : MonoBehaviour
 
     void SpawnEnemy(Enemy enemy, Vector3 position)
     {
-        Debug.Log("Enemy Spawned");
         Instantiate(enemy, position, enemy.transform.rotation);
     }
 

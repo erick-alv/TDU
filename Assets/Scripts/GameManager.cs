@@ -136,7 +136,6 @@ public class GameManager : MonoBehaviour
 
     public void ReportDestroyedEnemy()
     {
-        Debug.Log("Enemy destroyed report");
         destroyedEnemiesCurrentWave++;
         if (destroyedEnemiesCurrentWave >= AmountEnemiesCurrentWave())
         {
