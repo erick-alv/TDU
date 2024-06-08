@@ -341,7 +341,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 73
+  m_fontSize: 75.25
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5758,7 +5758,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 82.65
+  m_fontSize: 79.5
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9674,7 +9674,7 @@ MonoBehaviour:
   turretPrefabs:
   - {fileID: 6326271193889010203, guid: 90c2c283025fc5e4da2d913226590bcc, type: 3}
   - {fileID: 243847416630735058, guid: 4b13a4eff89aef147a53c49a2f2d7535, type: 3}
-  - {fileID: 6326271193889010203, guid: 90c2c283025fc5e4da2d913226590bcc, type: 3}
+  - {fileID: 7787836569311552457, guid: b165c59b69646dc4c9d49ab69ec2ffd1, type: 3}
   logText: {fileID: 587279121}
   logTextElement: {fileID: 2096807682}
   upArrow: {fileID: 839460002}

@@ -4,22 +4,15 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
     public float speed = 10.0f;
     public int damage = 1;
-    
+
     private Enemy enemyTarget;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        if(!GameManager.Instance.Paused)
+        if (!GameManager.Instance.Paused)
         {
             if (enemyTarget == null)
             {
@@ -34,21 +27,18 @@ public class Bullet : MonoBehaviour
             float updateDistance = speed * Time.deltaTime * GameManager.Instance.SpeedUp;
 
 
-            if(updateDistance >= distanceToTarget)
+            if (updateDistance >= distanceToTarget)
             {
-                //HitTarget(); we wont be using this since we will use on TriggerEnter
                 updateDistance = distanceToTarget;
             }
 
             transform.Translate(dir * updateDistance, Space.World);
         }
-        
+
     }
 
     public void SetEnemyTarget(Enemy target)
     {
         enemyTarget = target;
     }
-
-
 }

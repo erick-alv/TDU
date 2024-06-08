@@ -10,7 +10,6 @@ using UnityEngine.UIElements;
 
 public class Constructor : MonoBehaviour
 {
-    
     public FieldCreator fieldCreator;
     public Material platSelectionMaterial;
     public Material validMaterial;
@@ -34,9 +33,7 @@ public class Constructor : MonoBehaviour
     public GameObject turret2El;
     public GameObject turret3El;
 
-
     enum Mode { None, Constructing, Destroying, MovingSelection, MovingNewPlace };
-    
 
     private int fieldWidth;
     private int fieldHeight;
@@ -47,7 +44,7 @@ public class Constructor : MonoBehaviour
     private List<FieldPlatform> secondaryPlatforms = new List<FieldPlatform>();
     private Vector2Int currentCoords = Vector2Int.zero;
     private List<Vector2Int> secondaryCoords = new List<Vector2Int>();
-    //vars to set/put null on changinf prefab
+    //vars to set/put null on changing prefab
     private int currentPrefabIndex = 0;
     private Turret currentTurret = null;
     private FieldPlatform prevMovePlatform = null;//just for move case
@@ -66,13 +63,11 @@ public class Constructor : MonoBehaviour
         el3Text.SetText($"Turret 3\nCost: {turretPrefabs[2].goldPrice}");
     }
 
-
-
     // __________________________________________________________Begin Modes
     public void BeginConstructing()
     {
         bool b = BeginInit();
-        if(!b)
+        if (!b)
         {
             return;
         }
@@ -173,16 +168,17 @@ public class Constructor : MonoBehaviour
     }
 
     // __________________________________________________________ Cancel, confirm and Validate action
-    
     public void CancelAction()
     {
         logText.SetText("");
         SetCurrentPlatformsToNormal();
 
-        if(currentMode == Mode.Constructing)
+        if (currentMode == Mode.Constructing)
         {
             Destroy(currentTurret.gameObject);
-        } else if(currentMode == Mode.MovingNewPlace) {
+        }
+        else if (currentMode == Mode.MovingNewPlace)
+        {
             prevMoveTurret.SetBackOriginalMaterial();
             //delete current Turret
             Destroy(currentTurret.gameObject);
@@ -190,13 +186,11 @@ public class Constructor : MonoBehaviour
             List<FieldPlatform> allPlatforms = new List<FieldPlatform> { prevMovePlatform };
             allPlatforms.AddRange(prevMoveSecondaryPlatforms);
             prevMovePlatform.SetTurret(prevMoveTurret.gameObject, allPlatforms, true);
-            foreach(var plat in prevMoveSecondaryPlatforms)
+            foreach (var plat in prevMoveSecondaryPlatforms)
             {
                 plat.SetTurret(prevMoveTurret.gameObject, allPlatforms, false);
             }
         }
-
-
         //Put variables again to default values
         CleanUp();
     }
@@ -210,10 +204,10 @@ public class Constructor : MonoBehaviour
             if (validPlacement && enoughGold)
             {
                 //Assign turret to platform
-                List<FieldPlatform> allPlatforms = new List<FieldPlatform> {currentPlatform};
+                List<FieldPlatform> allPlatforms = new List<FieldPlatform> { currentPlatform };
                 allPlatforms.AddRange(secondaryPlatforms);
                 currentPlatform.SetTurret(currentTurret.gameObject, allPlatforms, true);
-                foreach(var plat in secondaryPlatforms)
+                foreach (var plat in secondaryPlatforms)
                 {
                     plat.SetTurret(currentTurret.gameObject, allPlatforms, false);
                 }
@@ -230,28 +224,32 @@ public class Constructor : MonoBehaviour
 
                 //Put variables again to default values
                 CleanUp();
-            } else
+            }
+            else
             {
-                if(!validPlacement)
+                if (!validPlacement)
                 {
                     logText.SetText("It is not possible to construct the turret in the current location");
-                } else
+                }
+                else
                 {
                     logText.SetText("Not enough gold to build this turret");
                 }
-                
+
             }
-        } else if (currentMode == Mode.Destroying) { 
+        }
+        else if (currentMode == Mode.Destroying)
+        {
             bool validDeletion = Validate();
-            if(validDeletion)
+            if (validDeletion)
             {
                 //recover Gold of Platform
-                GameManager.Instance.IncreaseGold(currentTurret.goldPrice);
+                GameManager.Instance.IncreaseGold(currentPlatform.turretAtPlatform.GetComponent<Turret>().goldPrice);
                 //Destroy turret
                 Destroy(currentPlatform.turretAtPlatform);
                 List<FieldPlatform> allPlatforms = currentPlatform.platformsWithTurret;
                 //Remove reference in platforms
-                foreach(var plat in allPlatforms)
+                foreach (var plat in allPlatforms)
                 {
                     plat.RemoveTurret();
                 }
@@ -259,25 +257,28 @@ public class Constructor : MonoBehaviour
                 SetCurrentPlatformsToNormal();
                 //Put variables again to default values
                 CleanUp();
-                
 
-            } else
+
+            }
+            else
             {
                 logText.SetText("There is no turret to delete in the current location");
             }
-        } else if(currentMode == Mode.MovingSelection)
+        }
+        else if (currentMode == Mode.MovingSelection)
         {
             bool validMoving = Validate();
             if (validMoving)
             {
                 //we get the primary platform and secondary fields
                 List<FieldPlatform> allPlatforms = currentPlatform.platformsWithTurret;
-                foreach(var plat in allPlatforms)
+                foreach (var plat in allPlatforms)
                 {
                     if (plat.isPrimaryPlatform)
                     {
                         prevMovePlatform = plat;
-                    } else
+                    }
+                    else
                     {
                         prevMoveSecondaryPlatforms.Add(plat);
                     }
@@ -326,7 +327,8 @@ public class Constructor : MonoBehaviour
                 logText.SetText("There is no turret to move in the current location");
             }
 
-        } else if (currentMode == Mode.MovingNewPlace)
+        }
+        else if (currentMode == Mode.MovingNewPlace)
         {
             bool validPlacement = Validate();
             if (validPlacement)
@@ -388,11 +390,11 @@ public class Constructor : MonoBehaviour
     {
         if (currentMode == Mode.Constructing || currentMode == Mode.MovingNewPlace)
         {
-            if(currentPlatform.turretAtPlatform != null)
+            if (currentPlatform.turretAtPlatform != null)
             {
                 return false;
             }
-            foreach(var plat in secondaryPlatforms)
+            foreach (var plat in secondaryPlatforms)
             {
                 if (plat == null || plat.turretAtPlatform != null)
                 {
@@ -400,20 +402,23 @@ public class Constructor : MonoBehaviour
                 }
             }
             return true;
-        } else if (currentMode == Mode.Destroying || currentMode == Mode.MovingSelection)
+        }
+        else if (currentMode == Mode.Destroying || currentMode == Mode.MovingSelection)
         {
-            if(currentPlatform.turretAtPlatform == null)
+            if (currentPlatform.turretAtPlatform == null)
             {
                 return false;
-            } else
+            }
+            else
             {
                 return true;
             }
-        } else
+        }
+        else
         {
             throw new Exception($"Validate() should not be called in the mode {currentMode}");
         }
-        
+
     }
 
     // __________________________________________________________Visualization Code
@@ -431,28 +436,30 @@ public class Constructor : MonoBehaviour
             {
                 platform.SetBackOriginalMaterial();
             }
-            
+
         }
     }
 
     private void VisualizeCurrentPlatforms()
     {
         Material materialToUse;
-        if(currentMode == Mode.Constructing || currentMode == Mode.MovingNewPlace)
+        if (currentMode == Mode.Constructing || currentMode == Mode.MovingNewPlace)
         {
             bool validPlacement = Validate();
             if (validPlacement)
             {
                 materialToUse = validMaterial;
-            } else
+            }
+            else
             {
                 materialToUse = invalidMaterial;
             }
-        } else
+        }
+        else
         {
             materialToUse = platSelectionMaterial;
         }
-        
+
         currentPlatform.SetMaterial(materialToUse);
         foreach (var platform in secondaryPlatforms)
         {
@@ -533,7 +540,7 @@ public class Constructor : MonoBehaviour
         currentPlatform = refPlat;
         currentPlatform.SetMaterial(platSelectionMaterial);
 
-        
+
         if (currentMode == Mode.Constructing || currentMode == Mode.MovingNewPlace)
         {
             //  Turret on this platform
@@ -585,7 +592,8 @@ public class Constructor : MonoBehaviour
 
     public void SwitchTurretPrefab(string prefabIndex)
     {
-        if (currentMode == Mode.Constructing) {
+        if (currentMode == Mode.Constructing)
+        {
             int index;
             bool parsed = int.TryParse(prefabIndex, out index);
             if (!parsed || index < 0 || index >= turretPrefabs.Length || index == currentPrefabIndex)
@@ -622,7 +630,7 @@ public class Constructor : MonoBehaviour
             //  Visualize current platforms and turrets    
             VisualizeCurrentPlatforms();
         }
-        
+
 
     }
 
@@ -633,7 +641,7 @@ public class Constructor : MonoBehaviour
     {
         optionsEl.SetActive(visible);
     }
-    
+
     private void SetVisibilityMovementArrows(bool visible)
     {
         upArrow.SetActive(visible);

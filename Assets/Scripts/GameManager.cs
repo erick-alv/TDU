@@ -7,7 +7,6 @@ using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager Instance { get; private set; }
 
     //Properties
@@ -65,7 +64,7 @@ public class GameManager : MonoBehaviour
     {
         livesText.SetText($"Lives: {Lives}");
         goldText.SetText($"Gold: {Gold}");
-        waveText.SetText($"Lives: {WaveNumber}");
+        waveText.SetText($"Wave: {WaveNumber}");
     }
 
     public void RestartValues()
@@ -87,7 +86,7 @@ public class GameManager : MonoBehaviour
         SpeedUI.SetActive(false);
 
         GameObject[] turrets = GameObject.FindGameObjectsWithTag("Turret");
-        foreach(GameObject obj in turrets)
+        foreach (GameObject obj in turrets)
         {
             Destroy(obj);
         }
@@ -98,10 +97,10 @@ public class GameManager : MonoBehaviour
         }
         //Bullets Destroy themselves
     }
-    
+
     public void StartWave()
     {
-        if(fieldCreator.fieldInitialized)
+        if (fieldCreator.fieldInitialized)
         {
             List<Vector3> pathPositions = fieldCreator.GetPathPointsPositions();
             if (pathPositions.Count > 0)
@@ -113,7 +112,8 @@ public class GameManager : MonoBehaviour
                 waveText.SetText($"Wave: {WaveNumber}");
                 spawner.StartSpawning();
             }
-        } else
+        }
+        else
         {
             WaveNumber += 1;
             destroyedEnemiesCurrentWave = 0;
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
     public void CentrateCamera()
     {
         Vector2 coordDim = fieldCreator.GetFieldCoordinatesDimension();
-        Vector3 newPos = new Vector3(coordDim.x/2, cam.transform.position.y, coordDim.y/2);
+        Vector3 newPos = new Vector3(coordDim.x / 2, cam.transform.position.y, coordDim.y / 2);
         cam.transform.position = newPos;
     }
 
@@ -136,8 +136,9 @@ public class GameManager : MonoBehaviour
 
     public void ReportDestroyedEnemy()
     {
+        Debug.Log("Enemy destroyed report");
         destroyedEnemiesCurrentWave++;
-        if(destroyedEnemiesCurrentWave >= AmountEnemiesCurrentWave())
+        if (destroyedEnemiesCurrentWave >= AmountEnemiesCurrentWave())
         {
             buildOrWaveUI.SetActive(true);
             SpeedUI.SetActive(false);
@@ -146,13 +147,14 @@ public class GameManager : MonoBehaviour
 
     public void SpeedUpFunction()
     {
-        this.SpeedUp *=2;
+        this.SpeedUp *= 2;
         //Deactivate if already reached 
-        if( this.SpeedUp >= upLimitSpeed) { 
+        if (this.SpeedUp >= upLimitSpeed)
+        {
             speedUpButton.SetActive(false);
         }
 
-        if(!slowDownButton.activeSelf && this.SpeedUp > downLimitSpeed)
+        if (!slowDownButton.activeSelf && this.SpeedUp > downLimitSpeed)
         {
             slowDownButton.SetActive(true);
         }
@@ -177,7 +179,7 @@ public class GameManager : MonoBehaviour
     {
         Lives -= livePoints;
         livesText.SetText($"Lives: {Lives}");
-        if(Lives <= 0)
+        if (Lives <= 0)
         {
             Paused = true;
             gameOverCanvas.SetActive(true);
@@ -207,7 +209,7 @@ public class GameManager : MonoBehaviour
         Paused = false;
         pauseCanvas.SetActive(false);
     }
-    
+
     public void ExitGame()
     {
         Application.Quit();

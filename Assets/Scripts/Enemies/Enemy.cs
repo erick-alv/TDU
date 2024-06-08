@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
-{   
+{
     public float speed = 4;
     public float reachDistance = 0.3f;
     public int damageResistance = 1;
@@ -12,8 +12,9 @@ public class Enemy : MonoBehaviour
     protected PathPoint target;
     protected int pathIndex = 0;
     private int damageReceived = 0;
+    //To avoid calling methods of Finish or die multiple times due to delay of Destroy
     private bool died = false;
-
+    private bool reachedEnd = false;
 
     private void Start()
     {
@@ -39,7 +40,8 @@ public class Enemy : MonoBehaviour
         Vector3 distVec = target.transform.position - transform.position;
         distVec[1] = 0;
         float distance = distVec.magnitude;
-        if (distance <= reachDistance) {
+        if (distance <= reachDistance)
+        {
             GetNextPoint();
         }
     }
@@ -54,7 +56,7 @@ public class Enemy : MonoBehaviour
 
     void GetNextPoint()
     {
-        if(pathIndex >= GroundPath.points.Length - 1)
+        if (pathIndex >= GroundPath.points.Length - 1)
         {
             EndPointReached();
             return;
@@ -66,9 +68,13 @@ public class Enemy : MonoBehaviour
 
     void EndPointReached()
     {
-        GameManager.Instance.DecreaseLives(1);
-        GameManager.Instance.ReportDestroyedEnemy();
-        Destroy(gameObject);
+        if (!reachedEnd)
+        {
+            reachedEnd = true;
+            GameManager.Instance.DecreaseLives(1);
+            GameManager.Instance.ReportDestroyedEnemy();
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -84,18 +90,21 @@ public class Enemy : MonoBehaviour
     private void HitByBullet(Bullet bullet)
     {
         damageReceived += bullet.damage;
-        if(damageReceived >= damageResistance) {
+        if (damageReceived >= damageResistance)
+        {
             Die();
         }
     }
 
     private void Die()
     {
-        died = true;
-        GameManager.Instance.IncreaseGold(1);
-        GameManager.Instance.ReportDestroyedEnemy();
-        Destroy(gameObject);
+        if (!died)
+        {
+            died = true;
+            GameManager.Instance.IncreaseGold(1);
+            GameManager.Instance.ReportDestroyedEnemy();
+            Destroy(gameObject);
+        }
     }
-
 
 }

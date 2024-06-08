@@ -5,10 +5,9 @@ using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
-
     public FlyingEnemy flyingEnemyPrefab;
     public GroundEnemy groundEnemyPrefab;
-    public float countDownTime=2f;
+    public float countDownTime = 2f;
 
     private int spawnedEnemiesCurrentWave = 0;
     public bool isSpawning = false;
@@ -31,7 +30,7 @@ public class Spawner : MonoBehaviour
             {
                 SpawnGroundEnenemy();
                 spawnedEnemiesCurrentWave++;
-                if(spawnedEnemiesCurrentWave < GameManager.Instance.AmountEnemiesCurrentWave())
+                if (spawnedEnemiesCurrentWave < GameManager.Instance.AmountEnemiesCurrentWave())
                 {
                     SpawnFlyingEnemy();
                     spawnedEnemiesCurrentWave++;
@@ -42,10 +41,10 @@ public class Spawner : MonoBehaviour
             currentActiveTime += Time.deltaTime * GameManager.Instance.SpeedUp;
             if (spawnedEnemiesCurrentWave >= GameManager.Instance.AmountEnemiesCurrentWave())
             {
-                isSpawning=false;
+                isSpawning = false;
             }
         }
-        
+
     }
 
     public void SpawnGroundEnenemy()
@@ -64,6 +63,7 @@ public class Spawner : MonoBehaviour
 
     void SpawnEnemy(Enemy enemy, Vector3 position)
     {
+        Debug.Log("Enemy Spawned");
         Instantiate(enemy, position, enemy.transform.rotation);
     }
 

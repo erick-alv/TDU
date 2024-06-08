@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PathPoint : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
 }

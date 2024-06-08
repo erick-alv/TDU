@@ -7,7 +7,7 @@ public class FlyingEnemy : Enemy
 {
     protected override void StartPathTarget()
     {
-        target = GroundPath.points[GroundPath.points.Length-1];
+        target = GroundPath.points[GroundPath.points.Length - 1];
         pathIndex = GroundPath.points.Length - 1;
     }
 }

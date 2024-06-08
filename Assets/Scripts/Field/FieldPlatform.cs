@@ -8,7 +8,6 @@ public class FieldPlatform : MonoBehaviour
     public GameObject turretAtPlatform = null;
     public List<FieldPlatform> platformsWithTurret = null;
     public bool isPrimaryPlatform = false;
-    
 
     private Renderer rend;
     private Material originalMaterial;
@@ -17,18 +16,6 @@ public class FieldPlatform : MonoBehaviour
     {
         rend = GetComponent<Renderer>();
         originalMaterial = rend.material;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SetTurret(GameObject turret, List<FieldPlatform> platformsWithTurret, bool isPrimary)

@@ -19,8 +19,8 @@ public class FieldCreator : MonoBehaviour
 
     private int width = 0;
     private int height = 0;
-    private float spacing = 0.25f;
-    private float platformDim = 4.0f;
+    private const float spacing = 0.25f;
+    private const float platformDim = 4.0f;
 
     //variables of created Field
     private List<Vector2Int> pathSpaces = new List<Vector2Int>();
@@ -28,24 +28,11 @@ public class FieldCreator : MonoBehaviour
     private FieldPlatform[][] platforms;
     public bool fieldInitialized;
 
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     public void CreateFieldOfDimensions()
     {
         width = ParseInputText(widthInputField.text);
         height = ParseInputText(heightInputField.text);
-        
+
         EliminatePreviousField();
 
         platforms = new FieldPlatform[width][];
@@ -55,21 +42,21 @@ public class FieldCreator : MonoBehaviour
         }
         fieldInitialized = true;
 
-
         DeterminePath();
-
 
         //create platforms
         for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < height; j++) {
+            for (int j = 0; j < height; j++)
+            {
                 Vector2Int coord = new Vector2Int(i, j);
                 if (!pathSpaces.Contains(coord))
                 {
                     Vector3 pPos = CoordToPos(coord.x, coord.y);
                     platforms[i][j] = Instantiate<FieldPlatform>(platformPrefab, pPos, platformPrefab.transform.rotation);
                     platforms[i][j].coords = new Vector2Int(i, j);
-                } else
+                }
+                else
                 {
                     platforms[i][j] = null;
                 }
@@ -88,12 +75,12 @@ public class FieldCreator : MonoBehaviour
     private int ParseInputText(string text)
     {
         int num;
-        bool validParse = int.TryParse(text, out num );
-        if(!validParse)
+        bool validParse = int.TryParse(text, out num);
+        if (!validParse)
         {
             return 5;
         }
-        if(num<5)
+        if (num < 5)
         {
             return 5;
         }
@@ -102,15 +89,15 @@ public class FieldCreator : MonoBehaviour
 
     public void EliminatePreviousField()
     {
-        if(pathSpaces != null)
+        if (pathSpaces != null)
         {
             pathSpaces.Clear();
             pathPointsPositions.Clear();
         }
 
-        if(platforms != null)
+        if (platforms != null)
         {
-            for(int i = 0; i < platforms.Length; i++)
+            for (int i = 0; i < platforms.Length; i++)
             {
                 for (int j = 0; j < platforms[i].Length; j++)
                 {
@@ -133,31 +120,32 @@ public class FieldCreator : MonoBehaviour
         endPoint.transform.position = new Vector3(endPos.x, endPoint.transform.position.y, endPos.z);
 
         pathPointsPositions.Add(endPos);
-        //Firt the rows
-        for( int j = 1; j<height-1; j+=2)//Row per row (game view down to up)
+        //First the rows
+        for (int j = 1; j < height - 1; j += 2)//Row per row (game view down to up)
         {
-            for(int i = 1; i<width-1; i++)
+            for (int i = 1; i < width - 1; i++)
             {
                 pathSpaces.Add(new Vector2Int(i, j));
             }
 
             Vector3 leftPos = CoordToPos(1, j);
-            Vector3 rightPos = CoordToPos(width-2, j);
+            Vector3 rightPos = CoordToPos(width - 2, j);
 
             if (left)
             {
                 //space in between path rows
-                pathSpaces.Add(new Vector2Int(1, j-1));
+                pathSpaces.Add(new Vector2Int(1, j - 1));
                 //add pathPoint left to right
                 pathPointsPositions.Add(leftPos);
                 pathPointsPositions.Add(rightPos);
-            } else
+            }
+            else
             {
                 //space in between path rows
-                pathSpaces.Add(new Vector2Int(width-2,j - 1));
+                pathSpaces.Add(new Vector2Int(width - 2, j - 1));
                 //add pathPoint right to left
                 pathPointsPositions.Add(rightPos);
-                pathPointsPositions.Add(leftPos);   
+                pathPointsPositions.Add(leftPos);
             }
 
             left = !left;
@@ -165,15 +153,16 @@ public class FieldCreator : MonoBehaviour
 
         //Adding spaces of the beginning
         Vector3 startPos;
-        if(left)
+        if (left)
         {
-            pathSpaces.Add(new Vector2Int(1, height-1));
+            pathSpaces.Add(new Vector2Int(1, height - 1));
             startPos = CoordToPos(1, height - 1);
-            if(height % 2 == 0)
+            if (height % 2 == 0)
             {
                 pathSpaces.Add(new Vector2Int(1, height - 2));
             }
-        } else
+        }
+        else
         {
             pathSpaces.Add(new Vector2Int(width - 2, height - 1));
             startPos = CoordToPos(width - 2, height - 1);
@@ -201,22 +190,23 @@ public class FieldCreator : MonoBehaviour
 
     public Vector2 GetFieldCoordinatesDimension()
     {
-        return new Vector2((width - 1)*(platformDim+spacing), (height-1) * (platformDim + spacing));
+        return new Vector2((width - 1) * (platformDim + spacing), (height - 1) * (platformDim + spacing));
     }
 
     public List<FieldPlatform> GetPlatformsAtCoords(List<Vector2Int> coords)
     {
         List<FieldPlatform> plats = new List<FieldPlatform>();
-        foreach(Vector2Int coord in coords) {
-            if (coord.x >= width || coord.x <0 || coord.y >= height || coord.y < 0) {
+        foreach (Vector2Int coord in coords)
+        {
+            if (coord.x >= width || coord.x < 0 || coord.y >= height || coord.y < 0)
+            {
                 plats.Add(null);//if it is out of range put a null
-            } else
+            }
+            else
             {
                 plats.Add(platforms[coord.x][coord.y]);
             }
         }
         return plats;
     }
-
-    
 }
